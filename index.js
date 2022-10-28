@@ -5,18 +5,22 @@ $(window).on("load", () => {
 });
 
 $(document).on("click", "#changeState", () => {
-    isChange = true;
-    showState();
+    if (!isChange) {
+        isChange = true;
+        showState();
+    
+        $(window).on("beforeunload", function (e) {
+            e.preventDefault();
+            return "";
+        });
+    }
 });
 
 $(document).on("click", "#save", () => {
-    isChange = false;
-    showState();
-});
-
-$(window).on("beforeunload", (e) => {
     if (isChange) {
-        e.returnValue = "一時保存していないデータが存在します。本当に閉じますか？";
+        isChange = false;
+        showState();
+        $(window).off("beforeunload");
     }
 });
 
